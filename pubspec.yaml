@@ -7,16 +7,16 @@ homepage: https://github.com/wilburt/flutter_paystack
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.0
-  intl: ^0.17.0
-  meta: ^1.3.0
-  async: ^2.5.0
+  http: ^1.0.0
+  intl: ^0.18.1
+  meta: ^1.9.1
+  async: ^2.11.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  matcher: ^0.12.10
-  mockito: ^5.0.1
+  matcher: ^0.12.16
+  mockito: ^5.4.2
 
 
 flutter:
@@ -24,15 +24,15 @@ flutter:
     platforms:
       android:
         package: co.paystack.flutterpaystack
-        pluginClass:  FlutterPaystackPlugin
+        pluginClass: FlutterPaystackPlugin
       ios:
-        pluginClass:  FlutterPaystackPlugin
+        pluginClass: FlutterPaystackPlugin
 
   assets:
-   - assets/images/
+  - assets/images/
 
 
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
   flutter: ">=2.0.0"
