@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// This is a modification of [AlertDialog]. A lot of modifications was made. The goal is
@@ -15,7 +14,7 @@ class CustomAlertDialog extends StatelessWidget {
     this.expanded = false,
     this.fullscreen = false,
     required this.content,
-  })  : super(key: key);
+  }) : super(key: key);
 
   final Widget? title;
   final EdgeInsetsGeometry? titlePadding;
@@ -33,7 +32,7 @@ class CustomAlertDialog extends StatelessWidget {
       children.add(new Padding(
         padding: titlePadding!,
         child: new DefaultTextStyle(
-          style: Theme.of(context).textTheme.headline6!,
+          style: Theme.of(context).textTheme.headlineSmall!,
           child: new Semantics(child: title, namesRoute: true),
         ),
       ));
@@ -43,7 +42,7 @@ class CustomAlertDialog extends StatelessWidget {
       child: new Padding(
         padding: contentPadding,
         child: new DefaultTextStyle(
-          style: Theme.of(context).textTheme.subtitle1!,
+          style: Theme.of(context).textTheme.titleSmall!,
           child: content,
         ),
       ),
