@@ -10,12 +10,12 @@ dependencies:
   http: ^1.2.2
   intl: ^0.18.0
   meta: ^1.15.0
-  async: ^2.12.0
+  async: ^2.11.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  matcher: ^0.12.17
+  matcher: ^0.12.15
   mockito: ^5.4.4
 
 
