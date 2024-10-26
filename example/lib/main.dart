@@ -36,7 +36,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
   final _formKey = GlobalKey<FormState>();
   final _verticalSizeBox = const SizedBox(height: 20.0);
   final _horizontalSizeBox = const SizedBox(width: 10.0);
@@ -46,10 +46,10 @@ class _HomePageState extends State<HomePage> {
     color: Colors.red,
   );
   int _radioValue = 0;
-  CheckoutMethod _method;
+  CheckoutMethod? _method;
   bool _inProgress = false;
-  String _cardNumber;
-  String _cvv;
+  String? _cardNumber;
+  String? _cvv;
   int _expiryMonth = 0;
   int _expiryYear = 0;
 
@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                     border: const UnderlineInputBorder(),
                     labelText: 'Card number',
                   ),
-                  onSaved: (String value) => _cardNumber = value,
+                  onSaved: (String? value) => _cardNumber = value,
                 ),
                 _verticalSizeBox,
                 Row(
@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                           border: const UnderlineInputBorder(),
                           labelText: 'CVV',
                         ),
-                        onSaved: (String value) => _cvv = value,
+                        onSaved: (String? value) => _cvv = value,
                       ),
                     ),
                     _horizontalSizeBox,
@@ -128,8 +128,8 @@ class _HomePageState extends State<HomePage> {
                           border: const UnderlineInputBorder(),
                           labelText: 'Expiry Month',
                         ),
-                        onSaved: (String value) =>
-                            _expiryMonth = int.tryParse(value),
+                        onSaved: (String? value) =>
+                            _expiryMonth = int.tryParse(value ?? '') ?? 1,
                       ),
                     ),
                     _horizontalSizeBox,
@@ -139,8 +139,9 @@ class _HomePageState extends State<HomePage> {
                           border: const UnderlineInputBorder(),
                           labelText: 'Expiry Year',
                         ),
-                        onSaved: (String value) =>
-                            _expiryYear = int.tryParse(value),
+                        onSaved: (String? value) => _expiryYear =
+                            int.tryParse(value ?? '') ??
+                                DateTime.now().year + 1,
                       ),
                     )
                   ],
@@ -148,13 +149,13 @@ class _HomePageState extends State<HomePage> {
                 _verticalSizeBox,
                 Theme(
                   data: Theme.of(context).copyWith(
-                    accentColor: green,
+                    // accentColor: green,
                     primaryColorLight: Colors.white,
                     primaryColorDark: navyBlue,
                     textTheme: Theme.of(context).textTheme.copyWith(
-                          bodyText2: TextStyle(
-                            color: lightBlue,
-                          ),
+                        // bodyText2: TextStyle(
+                        //   color: lightBlue,
+                        // ),
                         ),
                   ),
                   child: Builder(
@@ -195,7 +196,7 @@ class _HomePageState extends State<HomePage> {
                                           child: DropdownButton<CheckoutMethod>(
                                             value: _method,
                                             isDense: true,
-                                            onChanged: (CheckoutMethod value) {
+                                            onChanged: (CheckoutMethod? value) {
                                               setState(() {
                                                 _method = value;
                                               });
@@ -238,8 +239,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _handleRadioValueChanged(int value) =>
-      setState(() => _radioValue = value);
+  void _handleRadioValueChanged(int? value) =>
+      setState(() => _radioValue = value ?? _radioValue);
 
   _handleCheckout(BuildContext context) async {
     if (_method == null) {
@@ -252,7 +253,7 @@ class _HomePageState extends State<HomePage> {
       return;
     }
     setState(() => _inProgress = true);
-    _formKey.currentState.save();
+    _formKey.currentState?.save();
     Charge charge = Charge()
       ..amount = 10000 // In base currency
       ..email = 'customer@email.com'
@@ -260,7 +261,7 @@ class _HomePageState extends State<HomePage> {
 
     if (!_isLocal) {
       var accessCode = await _fetchAccessCodeFrmServer(_getReference());
-      charge.accessCode = accessCode;
+      charge.accessCode = accessCode ??'';
     } else {
       charge.reference = _getReference();
     }
@@ -268,7 +269,7 @@ class _HomePageState extends State<HomePage> {
     try {
       CheckoutResponse response = await PaystackPlugin.checkout(
         context,
-        method: _method,
+        method: _method!,
         charge: charge,
         fullscreen: false,
         logo: MyLogo(),
@@ -284,7 +285,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _startAfreshCharge() async {
-    _formKey.currentState.save();
+    _formKey.currentState?.save();
 
     Charge charge = Charge();
     charge.card = _getCardFromUI();
@@ -305,7 +306,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       // Perform transaction/initialize on Paystack server to get an access code
       // documentation: https://developers.paystack.co/reference#initialize-a-transaction
-      charge.accessCode = await _fetchAccessCodeFrmServer(_getReference());
+      charge.accessCode = await _fetchAccessCodeFrmServer(_getReference()) ??'';
       _chargeCard(charge);
     }
   }
@@ -344,8 +345,8 @@ class _HomePageState extends State<HomePage> {
   PaymentCard _getCardFromUI() {
     // Using just the must-required parameters.
     return PaymentCard(
-      number: _cardNumber,
-      cvc: _cvv,
+      number: _cardNumber!,
+      cvc: _cvv!,
       expiryMonth: _expiryMonth,
       expiryYear: _expiryYear,
     );
@@ -387,11 +388,11 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     } else {
-      widget = RaisedButton(
+      widget = ElevatedButton(
         onPressed: function,
-        color: Colors.blueAccent,
-        textColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 10.0),
+        // color: Colors.blueAccent,
+        // textColor: Colors.white,
+        // padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 10.0),
         child: Text(
           string.toUpperCase(),
           style: const TextStyle(fontSize: 17.0),
@@ -401,12 +402,12 @@ class _HomePageState extends State<HomePage> {
     return widget;
   }
 
-  Future<String> _fetchAccessCodeFrmServer(String reference) async {
+  Future<String?> _fetchAccessCodeFrmServer(String reference) async {
     String url = '$backendUrl/-access-code';
-    String accessCode;
+    String? accessCode;
     try {
       print("Access code url = $url");
-      http.Response response = await http.get(url);
+      http.Response response = await http.get(Uri.parse(url));
       accessCode = response.body;
       print('Response for access code = $accessCode');
     } catch (e) {
@@ -424,7 +425,7 @@ class _HomePageState extends State<HomePage> {
     _updateStatus(reference, 'Verifying...');
     String url = '$backendUrl/verify/$reference';
     try {
-      http.Response response = await http.get(url);
+      http.Response response = await http.get(Uri.parse(url));
       var body = response.body;
       _updateStatus(reference, body);
     } catch (e) {
@@ -443,12 +444,12 @@ class _HomePageState extends State<HomePage> {
 
   _showMessage(String message,
       [Duration duration = const Duration(seconds: 4)]) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+    _scaffoldKey.currentState?.showSnackBar(SnackBar(
       content: Text(message),
       duration: duration,
       action: SnackBarAction(
           label: 'CLOSE',
-          onPressed: () => _scaffoldKey.currentState.removeCurrentSnackBar()),
+          onPressed: () => _scaffoldKey.currentState?.removeCurrentSnackBar()),
     ));
   }
 
