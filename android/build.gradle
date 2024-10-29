@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 32
-
+    namespace "co.paystack.flutterpaystack"
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
